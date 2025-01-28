@@ -1,0 +1,61 @@
+{
+    "periods": {
+        "train": {
+            "start": 20240101,
+            "end": 20240930,
+            "obs_step": 3600,
+            "obs_step_btw_t0": 180000
+        },
+        "valid": {
+            "start": 20241001,
+            "end": 20241231,
+            "obs_step": 3600,
+            "obs_step_btw_t0": 180000
+        },
+        "test": {
+            "start": 20250101,
+            "end": 20250115,
+            "obs_step": 3600,
+            "obs_step_btw_t0": 10800
+        }
+    },
+    "grid": {
+        "name": "BRETAGNE0002",
+        "border_size": 0,
+        "projection_kwargs": {}
+    },
+    "settings":{
+        "standardize": true,
+        "file_format": "zarr"
+    },
+    "params": {
+        "mdps": {
+            "levels": [0],
+            "kind": "input_output"
+        },
+        "mdww": {
+            "levels": [0],
+            "kind": "input_output"
+        },
+        "mpps": {
+            "levels": [0],
+            "kind": "input_output"
+        },
+        "mpww": {
+            "levels": [0],
+            "kind": "input_output"
+        },
+        "shps": {
+            "levels": [0],
+            "kind": "input_output"
+        },
+        "shww": {
+            "levels": [0],
+            "kind": "input_output"
+        },
+        "swh": {
+            "levels": [0],
+            "kind": "input_output"
+        }
+    }
+}

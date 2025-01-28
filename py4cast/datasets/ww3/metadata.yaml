@@ -1,0 +1,83 @@
+GRIDS:
+  BRETAGNE0002:
+    extent: &id001
+    - 49.858
+    - 47.0
+    - -5.8
+    - -1.13
+    prefix: bret
+    resolution: 0.002
+    size: &id002
+    - 1430
+    - 2336
+WEATHER_PARAMS:
+  mdps:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Primary wave direction
+    name: mdps
+    shape: *id002
+    type_level: meanSea
+    unit: Degree true
+  mdww:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Mean direction of wind waves
+    name: mdww
+    shape: *id002
+    type_level: meanSea
+    unit: Degree true
+  mpps:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Primary wave mean period
+    name: mpps
+    shape: *id002
+    type_level: meanSea
+    unit: s
+  mpww:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Mean period of wind waves
+    name: mpww
+    shape: *id002
+    type_level: meanSea
+    unit: s
+  shps:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Significant height of primary wave
+    name: shps
+    shape: *id002
+    type_level: meanSea
+    unit: m
+  shww:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Significant height of wind waves
+    name: shww
+    shape: *id002
+    type_level: meanSea
+    unit: m
+  swh:
+    cumulative: false
+    extent: *id001
+    grid: BRETAGNE0002
+    levels: 0
+    long_name: Signific.height,combined wind waves+swell
+    name: swh
+    shape: *id002
+    type_level: meanSea
+    unit: m

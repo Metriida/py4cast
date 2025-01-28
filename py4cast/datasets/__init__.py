@@ -49,6 +49,17 @@ except ImportError:
     warnings.warn(f"Could not import DummyAccessor. {traceback.format_exc()}")
 
 
+try:
+    from .ww3 import WW3Accessor
+
+    registry["ww3"] = (
+        WW3Accessor,
+        DEFAULT_CONFIG_DIR / "datasets" / "ww3.json",
+    )
+except ImportError:
+    warnings.warn(f"Could not import WW3Accessor. {traceback.format_exc()}")
+
+
 def get_datasets(
     name: str,
     num_input_steps: int,
