@@ -36,7 +36,7 @@ class WW3Accessor(DataAccessor):
         path = SCRATCH_PATH / f"conf_{name}.grib"
         conf_ds = xr.open_dataset(path)
         bathy = conf_ds.unknown.values
-        landsea_mask = np.isnan(bathy)
+        landsea_mask = ~np.isnan(bathy)
         grid_conf = GridConfig(
             conf_ds.unknown.shape,
             conf_ds.latitude.values,
@@ -130,10 +130,16 @@ class WW3Accessor(DataAccessor):
             data_path = cls.get_filepath(ds_name, param, date, file_format)
             if file_format == "grib":
                 arr = xr.open_dataset(data_path, engine="cfgrib")
+                arr = arr.rename({"unknown": "shps"})
+                arr.shps.attrs["long_name"] = "Significant height of primary wave"
+                arr.shps.attrs["units"] = "m"
+
             else:
                 arr = xr.open_zarr(data_path)
             arr = arr[param.grib_param].values
-            # arr = arr[::-1] # invert lat as like in titan ?
+            arr = np.nan_to_num(arr, nan=0)
+            # invert latitude
+            arr = arr[::-1]
             arr_list.append(np.expand_dims(arr, axis=-1))
         return np.stack(arr_list)
 

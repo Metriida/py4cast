@@ -31,30 +31,37 @@
     "params": {
         "mdps": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         },
         "mdww": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         },
         "mpps": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         },
         "mpww": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         },
         "shps": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         },
         "shww": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         },
         "swh": {
             "levels": [0],
+            "typeOfLevel": "meanSea",
             "kind": "input_output"
         }
     }

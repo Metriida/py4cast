@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from tqdm import tqdm
+import tqdm
 from typer import Typer
 
 from py4cast.datasets import compute_dataset_stats as cds
@@ -91,11 +91,11 @@ def describe(path_config: Path = DEFAULT_CONFIG):
 def plot(path_config: Path = DEFAULT_CONFIG):
     """Plots a png and a gif for one sample."""
     train_ds, _, _ = DatasetABC.from_json(
-        RainfallAccessor,
+        WW3Accessor,
         fname=path_config,
         num_input_steps=1,
-        num_pred_steps_train=1,
-        num_pred_steps_val_tests=1,
+        num_pred_steps_train=5,
+        num_pred_steps_val_tests=5,
     )
     print("Plot gif of one sample...")
     sample = train_ds.sample_list[0]
@@ -109,7 +109,7 @@ def plot(path_config: Path = DEFAULT_CONFIG):
 def speedtest(path_config: Path = DEFAULT_CONFIG, n_iter: int = 5):
     print("Speed test:")
     train_ds, _, _ = DatasetABC.from_json(
-        RainfallAccessor,
+        WW3Accessor,
         fname=path_config,
         num_input_steps=1,
         num_pred_steps_train=1,
