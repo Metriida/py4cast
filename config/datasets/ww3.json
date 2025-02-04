@@ -4,19 +4,19 @@
             "start": 20240101,
             "end": 20240930,
             "obs_step": 3600,
-            "obs_step_btw_t0": 180000
+            "obs_step_btw_t0": 7200
         },
         "valid": {
             "start": 20241001,
             "end": 20241231,
             "obs_step": 3600,
-            "obs_step_btw_t0": 180000
+            "obs_step_btw_t0": 7200
         },
         "test": {
             "start": 20250101,
             "end": 20250115,
             "obs_step": 3600,
-            "obs_step_btw_t0": 10800
+            "obs_step_btw_t0": 7200
         }
     },
     "grid": {

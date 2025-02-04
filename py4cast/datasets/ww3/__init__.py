@@ -35,7 +35,7 @@ class WW3Accessor(DataAccessor):
 
         path = SCRATCH_PATH / f"conf_{name}.grib"
         conf_ds = xr.open_dataset(path)
-        bathy = conf_ds.unknown.values
+        bathy = np.nan_to_num(conf_ds.unknown.values)
         landsea_mask = ~np.isnan(bathy)
         grid_conf = GridConfig(
             conf_ds.unknown.shape,
@@ -137,7 +137,7 @@ class WW3Accessor(DataAccessor):
             else:
                 arr = xr.open_zarr(data_path)
             arr = arr[param.grib_param].values
-            arr = np.nan_to_num(arr, nan=0)
+            arr = np.nan_to_num(arr)
             # invert latitude
             arr = arr[::-1]
             arr_list.append(np.expand_dims(arr, axis=-1))
