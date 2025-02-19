@@ -2,6 +2,8 @@ import traceback
 import warnings
 from typing import Dict, Tuple
 
+from py4cast.datasets.access import DataAccessor
+
 from .base import DatasetABC  # noqa: F401
 
 registry = {}
@@ -37,9 +39,16 @@ except ImportError:
 try:
     from .rainfall import RainfallAccessor
 
-    registry["rainfall"] = (RainfallAccessor,)
+    registry["rainfall"] = RainfallAccessor
 except ImportError:
     warnings.warn(f"Could not import RainfallAccessor. {traceback.format_exc()}")
+
+
+def add_dataset(name: str, accessor: DataAccessor):
+    """
+    Add an external dataset in our registry.
+    """
+    registry.update({name: accessor})
 
 
 def get_datasets(
