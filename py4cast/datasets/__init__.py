@@ -44,13 +44,6 @@ except ImportError:
     warnings.warn(f"Could not import RainfallAccessor. {traceback.format_exc()}")
 
 
-def add_dataset(name: str, accessor: DataAccessor):
-    """
-    Add an external dataset in our registry.
-    """
-    registry.update({name: accessor})
-
-
 def get_datasets(
     name: str,
     num_input_steps: int,
