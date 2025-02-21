@@ -1,3 +1,4 @@
+import warnings
 from typing import Literal
 
 import torch
@@ -14,19 +15,23 @@ def compute_mean_std_min_max(
     Compute mean and standard deviation for this dataset.
     """
     random_batch = next(iter(dataset.torch_dataloader()))
+    # TODO mettre le dataset à zero a la place de nan
     named_tensor = getattr(random_batch, type_tensor)
     n_features = len(named_tensor.feature_names)
     sum_means = torch.zeros(n_features)
     sum_squares = torch.zeros(n_features)
     ndim_features = len(named_tensor.tensor.shape) - 1
     flat_input = named_tensor.tensor.flatten(0, ndim_features - 1)  # (X, Features)
+
+    if torch.isnan(flat_input).any() or torch.isnan(flat_input).any():
+        flat_input = torch.nan_to_num(flat_input)
+        warnings.warn(
+            "Your dataset contain NaN values, statistics will be calculated with zeros instead of NaN.",
+            UserWarning,
+        )
+
     best_min = torch.min(flat_input, dim=0).values
     best_max = torch.max(flat_input, dim=0).values
-
-    if torch.isnan(best_min).any() or torch.isnan(best_max).any():
-        raise ValueError(
-            "Your dataset contain NaN values, which prevent the calculation of statistics."
-        )
 
     counter = 0
     if dataset.settings.standardize:
@@ -96,6 +101,14 @@ def compute_time_step_stats(dataset: DatasetABC):
         # Here we assume that data are in 2 or 3 D
         inputs = batch.inputs.tensor
         outputs = batch.outputs.tensor
+
+        if torch.isnan(flat_input).any() or torch.isnan(flat_input).any():
+            inputs = torch.nan_to_num(inputs)
+            outputs = torch.nan_to_num(outputs)
+            warnings.warn(
+                "Your dataset contain NaN values, statistics will be calculated with zeros instead of NaN.",
+                UserWarning,
+            )
 
         in_out = torch.cat([inputs, outputs], dim=1)
         diff = in_out[:, 1:] - in_out[:, :-1]  # Substract information on time dimension

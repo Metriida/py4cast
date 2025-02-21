@@ -43,6 +43,19 @@ try:
 except ImportError:
     warnings.warn(f"Could not import RainfallAccessor. {traceback.format_exc()}")
 
+try:
+    from .rainfall import RainfallAccessor
+
+    registry["rainfall"] = RainfallAccessor
+except ImportError:
+    warnings.warn(f"Could not import RainfallAccessor. {traceback.format_exc()}")
+try:
+    from .ww3 import WW3Accessor
+
+    registry["ww3"] = WW3Accessor
+except ImportError:
+    warnings.warn(f"Could not import WW3Accessor. {traceback.format_exc()}")
+
 
 def get_datasets(
     name: str,
