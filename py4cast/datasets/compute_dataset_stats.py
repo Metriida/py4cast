@@ -23,7 +23,7 @@ def compute_mean_std_min_max(
     ndim_features = len(named_tensor.tensor.shape) - 1
     flat_input = named_tensor.tensor.flatten(0, ndim_features - 1)  # (X, Features)
 
-    if torch.isnan(flat_input).any() or torch.isnan(flat_input).any():
+    if torch.isnan(flat_input).any():
         flat_input = torch.nan_to_num(flat_input)
         warnings.warn(
             "Your dataset contain NaN values, statistics will be calculated with zeros instead of NaN.",
@@ -102,7 +102,7 @@ def compute_time_step_stats(dataset: DatasetABC):
         inputs = batch.inputs.tensor
         outputs = batch.outputs.tensor
 
-        if torch.isnan(flat_input).any() or torch.isnan(flat_input).any():
+        if torch.isnan(inputs).any() or torch.isnan(outputs).any():
             inputs = torch.nan_to_num(inputs)
             outputs = torch.nan_to_num(outputs)
             warnings.warn(
