@@ -31,7 +31,9 @@ def compute_mean_std_min_max(
         )
 
     best_min = torch.min(flat_input, dim=0).values
+    # print("MIN", best_min)
     best_max = torch.max(flat_input, dim=0).values
+    # print("MAX", best_max)
 
     counter = 0
     if dataset.settings.standardize:
@@ -43,6 +45,7 @@ def compute_mean_std_min_max(
     ):
         tensor = getattr(batch, type_tensor).tensor
         tensor = tensor.flatten(1, 3)  # Flatten to be (Batch, X, Features)
+        tensor = torch.nan_to_num(tensor) # remplace nan by 0
         counter += tensor.shape[0]  # += batch size
 
         sum_means += torch.sum(tensor.mean(dim=1), dim=0)  # (d_features)
