@@ -174,13 +174,18 @@ def collate_fn(items: List[Item]) -> ItemBatch:
 
     # Iterate over inputs, outputs and forcing fields
     for field_name in (f.name for f in fields(Item)):
-        batched_tensor = collate_tensor_fn(
-            [getattr(item, field_name).tensor for item in items]
-        ).type(torch.float32)
 
-        batch_of_items[field_name] = NamedTensor.expand_to_batch_like(
-            batched_tensor, getattr(items[0], field_name)
-        )
+        if getattr(items[0], field_name):
+            batched_tensor = collate_tensor_fn(
+                [getattr(item, field_name).tensor for item in items]
+            ).type(torch.float32)
+
+            batch_of_items[field_name] = NamedTensor.expand_to_batch_like(
+                batched_tensor, getattr(items[0], field_name)
+            )
+        # in case where inputs or forcings are None
+        else:
+            batch_of_items[field_name] = None
 
     return ItemBatch(**batch_of_items)
 
