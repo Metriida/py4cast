@@ -79,7 +79,7 @@ def compute_parameters_stats(dataset: DatasetABC):
     Compute mean and standard deviation for this dataset.
     """
     all_stats = {}
-    for type_tensor in ["inputs", "outputs", "forcing"]:
+    for type_tensor in ["outputs", "forcing"]:
         stats_dict = compute_mean_std_min_max(dataset, type_tensor)
         for feature, stats in stats_dict.items():
             # If feature was computed multiple times we keep only first occurence
