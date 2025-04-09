@@ -508,8 +508,6 @@ class Sample:
         inputs = NamedTensor.concat(linputs) if linputs else None
         outputs = NamedTensor.concat(loutputs) if loutputs else None
         forcing = NamedTensor.concat(lforcings) if lforcings else None
-        print(forcing)
-        print(outputs)
         if outputs is None:
             raise ValueError(
                 "Can't train anything without target data: list of outputs is empty."
