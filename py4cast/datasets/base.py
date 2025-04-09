@@ -98,6 +98,8 @@ class Item:
         Checks that the dimensions of the inputs, outputs are consistent.
         This is necessary for our auto-regressive training.
         """
+        print(self.inputs)
+        print(self.outputs)
         if self.inputs.names != self.outputs.names:
             raise ValueError(
                 f"Inputs and outputs must have the same dim names, got {self.inputs.names} and {self.outputs.names}"
@@ -503,7 +505,8 @@ class Sample:
         inputs = NamedTensor.concat(linputs) if linputs else None
         outputs = NamedTensor.concat(loutputs) if loutputs else None
         forcing = NamedTensor.concat(lforcings) if lforcings else None
-
+        print(inputs)
+        print(outputs)
         if outputs is None:
             raise ValueError(
                 "Can't train anything without target data: list of outputs is empty."
