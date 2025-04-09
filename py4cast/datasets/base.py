@@ -449,6 +449,7 @@ class Sample:
         Return inputs, outputs, forcings as tensors concatenated into an Item.
         """
         linputs, loutputs, lforcings = [], [], []
+        print(self.params)
 
         # Reading parameters from files
         for param in self.params:
