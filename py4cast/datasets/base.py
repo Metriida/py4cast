@@ -98,15 +98,13 @@ class Item:
         Checks that the dimensions of the inputs, outputs are consistent.
         This is necessary for our auto-regressive training.
         """
-        print(self.inputs)
-        print(self.outputs)
-        if self.inputs.names != self.outputs.names:
+        if self.inputs and self.inputs.names != self.outputs.names:
             raise ValueError(
                 f"Inputs and outputs must have the same dim names, got {self.inputs.names} and {self.outputs.names}"
             )
 
         # Also check feature names
-        if self.inputs.feature_names != self.outputs.feature_names:
+        if self.inputs and self.inputs.feature_names != self.outputs.feature_names:
             raise ValueError(
                 f"Inputs and outputs must have the same feature names, "
                 f"got {self.inputs.feature_names} and {self.outputs.feature_names}"
@@ -449,7 +447,6 @@ class Sample:
         Return inputs, outputs, forcings as tensors concatenated into an Item.
         """
         linputs, loutputs, lforcings = [], [], []
-        print(self.params)
 
         # Reading parameters from files
         for param in self.params:
@@ -506,7 +503,7 @@ class Sample:
         inputs = NamedTensor.concat(linputs) if linputs else None
         outputs = NamedTensor.concat(loutputs) if loutputs else None
         forcing = NamedTensor.concat(lforcings) if lforcings else None
-        print(inputs)
+        print(forcing)
         print(outputs)
         if outputs is None:
             raise ValueError(
