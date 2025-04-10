@@ -1,0 +1,65 @@
+data:
+  #args forwarded (linked) to model
+  dataset_name: "ww3"
+  num_input_steps: 1
+  num_pred_steps_train: 1
+  num_pred_steps_val_test: 1
+  batch_size: 8
+
+  #other args
+  num_workers: 10
+  prefetch_factor: null
+  pin_memory: False 
+  dataset_conf:
+    periods:
+      train:
+        start: 20240101
+        end: 20240110
+        obs_step: 3600
+        obs_step_btw_t0: 7200
+      valid:
+        start: 20240111
+        end: 20240120
+        obs_step: 3600
+        obs_step_btw_t0: 7200
+      test:
+        start: 20240121
+        end: 20240131
+        obs_step: 3600
+        obs_step_btw_t0: 7200
+    grid:
+      name: BRETAGNE0002
+      border_size: 0
+      projection_kwargs: {}
+    settings:
+      standardize: true
+      file_format: zarr
+    params:
+      mdps:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
+      mdww:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
+      mpps:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
+      mpww:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
+      shps:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
+      shww:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
+      swh:
+        levels: [0]
+        typeOfLevel: meanSea
+        kind: input_output
