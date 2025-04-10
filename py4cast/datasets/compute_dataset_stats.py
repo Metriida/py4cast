@@ -1,3 +1,4 @@
+import warnings
 from typing import Literal
 
 import torch
@@ -14,19 +15,25 @@ def compute_mean_std_min_max(
     Compute mean and standard deviation for this dataset.
     """
     random_batch = next(iter(dataset.torch_dataloader()))
+    # TODO mettre le dataset à zero a la place de nan
     named_tensor = getattr(random_batch, type_tensor)
     n_features = len(named_tensor.feature_names)
     sum_means = torch.zeros(n_features)
     sum_squares = torch.zeros(n_features)
     ndim_features = len(named_tensor.tensor.shape) - 1
     flat_input = named_tensor.tensor.flatten(0, ndim_features - 1)  # (X, Features)
-    best_min = torch.min(flat_input, dim=0).values
-    best_max = torch.max(flat_input, dim=0).values
 
-    if torch.isnan(best_min).any() or torch.isnan(best_max).any():
-        raise ValueError(
-            "Your dataset contain NaN values, which prevent the calculation of statistics."
+    if torch.isnan(flat_input).any():
+        flat_input = torch.nan_to_num(flat_input)
+        warnings.warn(
+            "Your dataset contain NaN values, statistics will be calculated with zeros instead of NaN.",
+            UserWarning,
         )
+
+    best_min = torch.min(flat_input, dim=0).values
+    # print("MIN", best_min)
+    best_max = torch.max(flat_input, dim=0).values
+    # print("MAX", best_max)
 
     counter = 0
     if dataset.settings.standardize:
@@ -38,6 +45,7 @@ def compute_mean_std_min_max(
     ):
         tensor = getattr(batch, type_tensor).tensor
         tensor = tensor.flatten(1, 3)  # Flatten to be (Batch, X, Features)
+        tensor = torch.nan_to_num(tensor) # remplace nan by 0
         counter += tensor.shape[0]  # += batch size
 
         sum_means += torch.sum(tensor.mean(dim=1), dim=0)  # (d_features)
@@ -71,7 +79,7 @@ def compute_parameters_stats(dataset: DatasetABC):
     Compute mean and standard deviation for this dataset.
     """
     all_stats = {}
-    for type_tensor in ["inputs", "outputs", "forcing"]:
+    for type_tensor in ["outputs", "forcing"]:
         stats_dict = compute_mean_std_min_max(dataset, type_tensor)
         for feature, stats in stats_dict.items():
             # If feature was computed multiple times we keep only first occurence
@@ -96,6 +104,14 @@ def compute_time_step_stats(dataset: DatasetABC):
         # Here we assume that data are in 2 or 3 D
         inputs = batch.inputs.tensor
         outputs = batch.outputs.tensor
+
+        if torch.isnan(inputs).any() or torch.isnan(outputs).any():
+            inputs = torch.nan_to_num(inputs)
+            outputs = torch.nan_to_num(outputs)
+            warnings.warn(
+                "Your dataset contain NaN values, statistics will be calculated with zeros instead of NaN.",
+                UserWarning,
+            )
 
         in_out = torch.cat([inputs, outputs], dim=1)
         diff = in_out[:, 1:] - in_out[:, :-1]  # Substract information on time dimension
