@@ -639,7 +639,7 @@ class AutoRegressiveLightning(LightningModule):
         plt.figure(figsize=(18, 6))
         for i in range(x.shape[-1]):
             plt.subplot(2, 4, i + 1)
-            x[0, 0, :, :, i].plot()
+            x[0, :, :, i].plot()
             plt.title(f"x {i}")
         plt.tight_layout()
         plt.save("test_x.png")
