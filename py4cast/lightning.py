@@ -638,7 +638,7 @@ class AutoRegressiveLightning(LightningModule):
         import matplotlib.pyplot as plt
         plt.figure(figsize=(18, 6))
         for i in range(x.shape[-1]):
-            plt.subplot(4, 4, i + 1)
+            plt.subplot(5, 5, i + 1)
             plt.imshow(x[0, :, :, i])
             plt.title(f"x {i}")
         plt.tight_layout()
