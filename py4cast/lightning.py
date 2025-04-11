@@ -498,11 +498,12 @@ class AutoRegressiveLightning(LightningModule):
             # Should be greater or equal to 1 (otherwise nothing is done).
             for k in range(num_inter_steps):
                 x = self._next_x(batch, prev_states, i)
+                x = torch.nan_to_num(x, nan=-1)
                 # Graph (B, N_grid, d_f) or Conv (B, N_lat,N_lon d_f)
                 if self.channels_last:
                     x = x.to(memory_format=torch.channels_last)
-                if self.dataset_name == "rainfall":
-                    x = torch.nan_to_num(x, nan=-1)
+                # if self.dataset_name == "rainfall":
+                #     x = torch.nan_to_num(x, nan=-1)
                 if self.mask_ratio != 0:  # maskedautoencoder strategy
                     x = self.mask_tensor(x)
                 # Here we adapt our tensors to the order of dimensions of CNNs and ViTs
@@ -676,8 +677,11 @@ class AutoRegressiveLightning(LightningModule):
             self.output_dtype = batch.outputs.tensor.dtype
 
         prediction, target = self.common_step(batch)
+        print("Nan in pred ? ", torch.isnan(prediction))
+        print("Nan in target ? ", torch.isnan(target))
         # Compute loss: mean over unrolled times and batch
         batch_loss = torch.mean(self.loss(prediction, target))
+        print("Loss: ", batch_loss)
 
         self.training_step_losses.append(batch_loss)
 
