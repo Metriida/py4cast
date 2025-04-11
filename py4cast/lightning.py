@@ -677,8 +677,8 @@ class AutoRegressiveLightning(LightningModule):
             self.output_dtype = batch.outputs.tensor.dtype
 
         prediction, target = self.common_step(batch)
-        print("Nan in pred ? ", torch.isnan(prediction))
-        print("Nan in target ? ", torch.isnan(target))
+        print("Nan in pred ? ", torch.isnan(prediction.tensor))
+        print("Nan in target ? ", torch.isnan(target.tensor))
         # Compute loss: mean over unrolled times and batch
         batch_loss = torch.mean(self.loss(prediction, target))
         print("Loss: ", batch_loss)
