@@ -642,7 +642,7 @@ class AutoRegressiveLightning(LightningModule):
             plt.imshow(x[0, :, :, i])
             plt.title(f"x {i}")
         plt.tight_layout()
-        plt.save("test_x.png")
+        plt.savefig("test_x.png")
         return x
 
     def mask_tensor(self, x):
@@ -715,7 +715,7 @@ class AutoRegressiveLightning(LightningModule):
             plt.imshow(target.tensor[0, 0, :, :, i])
             plt.title(f"target {i}")
         plt.tight_layout()
-        plt.save("test_forcing.png")
+        plt.savefig("test_forcing.png")
 
         # Notify every plotters
         if self.logging_enabled:
