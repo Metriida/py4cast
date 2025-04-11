@@ -635,7 +635,7 @@ class AutoRegressiveLightning(LightningModule):
             inputs + [self.grid_static_features[: batch.batch_size], forcing.tensor],
             dim=forcing.dim_index("features"),
         )
-        import matplotlib as plt
+        import matplotlib.pyplot as plt
         plt.figure(figsize=(18, 6))
         for i in range(x.shape[-1]):
             plt.subplot(2, 4, i + 1)
@@ -708,7 +708,7 @@ class AutoRegressiveLightning(LightningModule):
 
         self.training_step_losses.append(batch_loss)
 
-        import matplotlib as plt
+        import matplotlib.pyplot as plt
         plt.figure(figsize=(18, 6))
         for i in range(7):
             plt.subplot(2, 4, i + 1)
