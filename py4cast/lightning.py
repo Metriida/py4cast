@@ -498,7 +498,6 @@ class AutoRegressiveLightning(LightningModule):
             # Should be greater or equal to 1 (otherwise nothing is done).
             for k in range(num_inter_steps):
                 x = self._next_x(batch, prev_states, i)
-                x = torch.nan_to_num(x, nan=-1)
                 # Graph (B, N_grid, d_f) or Conv (B, N_lat,N_lon d_f)
                 if self.channels_last:
                     x = x.to(memory_format=torch.channels_last)
@@ -635,6 +634,9 @@ class AutoRegressiveLightning(LightningModule):
             inputs + [self.grid_static_features[: batch.batch_size], forcing.tensor],
             dim=forcing.dim_index("features"),
         )
+
+        x = torch.nan_to_num(x, nan=-1)
+        
         import matplotlib.pyplot as plt
         plt.figure(figsize=(18, 6))
         for i in range(x.shape[-1]):
