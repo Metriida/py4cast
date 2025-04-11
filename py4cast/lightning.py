@@ -635,6 +635,14 @@ class AutoRegressiveLightning(LightningModule):
             inputs + [self.grid_static_features[: batch.batch_size], forcing.tensor],
             dim=forcing.dim_index("features"),
         )
+        import matplotlib as plt
+        plt.figure(figsize=(18, 6))
+        for i in range(x.shape[-1]):
+            plt.subplot(2, 4, i + 1)
+            x.tensor[0, 0, :, :, i].plot()
+            plt.title(f"x {i}")
+        plt.tight_layout()
+        plt.save("test_x.png")
         return x
 
     def mask_tensor(self, x):
@@ -680,6 +688,7 @@ class AutoRegressiveLightning(LightningModule):
         print("Nan in pred ? ", prediction.tensor.shape)
         print("Nan in target ? ", target.tensor.shape)
 
+        #MODIF
         pred = torch.nan_to_num(prediction.tensor, nan=-1)
         targ = torch.nan_to_num(target.tensor, nan=-1)
         prediction = NamedTensor(
@@ -692,11 +701,21 @@ class AutoRegressiveLightning(LightningModule):
                 self.output_dim_names,
                 self.output_feature_names,
             )
+        
         # Compute loss: mean over unrolled times and batch
         batch_loss = torch.mean(self.loss(prediction, target))
         print("Loss: ", batch_loss)
 
         self.training_step_losses.append(batch_loss)
+
+        import matplotlib as plt
+        plt.figure(figsize=(18, 6))
+        for i in range(7):
+            plt.subplot(2, 4, i + 1)
+            target.tensor[0, 0, :, :, i].plot()
+            plt.title(f"target {i}")
+        plt.tight_layout()
+        plt.save("test_forcing.png")
 
         # Notify every plotters
         if self.logging_enabled:
