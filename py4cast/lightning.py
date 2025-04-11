@@ -679,10 +679,21 @@ class AutoRegressiveLightning(LightningModule):
         prediction, target = self.common_step(batch)
         print("Nan in pred ? ", prediction.tensor.shape)
         print("Nan in target ? ", target.tensor.shape)
-        pred = torch.nan_to_num(prediction.tensor, -1)
-        targ = torch.nan_to_num(target.tensor, -1)
+
+        pred = torch.nan_to_num(prediction.tensor, nan=-1)
+        targ = torch.nan_to_num(target.tensor, nan=-1)
+        prediction = NamedTensor(
+                pred.type(self.output_dtype),
+                self.output_dim_names,
+                self.output_feature_names,
+            )
+        target = NamedTensor(
+                targ.type(self.output_dtype),
+                self.output_dim_names,
+                self.output_feature_names,
+            )
         # Compute loss: mean over unrolled times and batch
-        batch_loss = torch.mean(self.loss(pred, targ))
+        batch_loss = torch.mean(self.loss(prediction, target))
         print("Loss: ", batch_loss)
 
         self.training_step_losses.append(batch_loss)
