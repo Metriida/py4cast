@@ -626,8 +626,9 @@ class AutoRegressiveLightning(LightningModule):
         """
         forcing = batch.forcing.select_dim("timestep", step_idx, bare_tensor=False)
         ds = self.training_strategy == "downscaling_only"
+        #prblm si nan tout n'est pas à zeros
         inputs = [
-            prev_states.select_dim("timestep", idx) * (1 - ds)
+            torch.nan_to_num(prev_states.select_dim("timestep", idx), nan=-1) * (1 - ds)
             for idx in range(batch.num_input_steps)
         ]
         x = torch.cat(
@@ -636,7 +637,7 @@ class AutoRegressiveLightning(LightningModule):
         )
 
         x = torch.nan_to_num(x, nan=-1)
-        
+
         import matplotlib.pyplot as plt
         plt.figure(figsize=(18, 6))
         for i in range(x.shape[-1]):
