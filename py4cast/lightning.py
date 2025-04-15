@@ -511,6 +511,7 @@ class AutoRegressiveLightning(LightningModule):
                     y = self.model(x)
                     y = features_second_to_last(y)
                 else:
+                    torch.save(x, "x.pt")
                     y = self.model(x)
 
                 # We update the latest of our prev_states with the network output
