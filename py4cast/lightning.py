@@ -511,9 +511,8 @@ class AutoRegressiveLightning(LightningModule):
                     y = self.model(x)
                     y = features_second_to_last(y)
                 else:
-                    torch.save(x, "x.pt")
                     y = self.model(x)
-
+                torch.save(x, "x.pt")
                 # We update the latest of our prev_states with the network output
                 if scale_y:
                     predicted_state = (
@@ -629,11 +628,11 @@ class AutoRegressiveLightning(LightningModule):
         ds = self.training_strategy == "downscaling_only"
         #prblm si nan tout n'est pas à zeros
         inputs = [
-            torch.nan_to_num(prev_states.select_dim("timestep", idx), nan=-1) * (1 - ds)
+            torch.nan_to_num(prev_states.select_dim("timestep", idx), nan=-1)
             for idx in range(batch.num_input_steps)
         ]
         x = torch.cat(
-            inputs + [self.grid_static_features[: batch.batch_size], forcing.tensor],
+            inputs* (1 - ds) + [self.grid_static_features[: batch.batch_size], forcing.tensor],
             dim=forcing.dim_index("features"),
         )
 
