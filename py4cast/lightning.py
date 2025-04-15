@@ -628,11 +628,11 @@ class AutoRegressiveLightning(LightningModule):
         ds = self.training_strategy == "downscaling_only"
         #prblm si nan tout n'est pas à zeros
         inputs = [
-            torch.nan_to_num(prev_states.select_dim("timestep", idx), nan=-1)
+            torch.nan_to_num(prev_states.select_dim("timestep", idx), nan=-1)* (1 - ds)
             for idx in range(batch.num_input_steps)
         ]
         x = torch.cat(
-            inputs* (1 - ds) + [self.grid_static_features[: batch.batch_size], forcing.tensor],
+            inputs + [self.grid_static_features[: batch.batch_size], forcing.tensor],
             dim=forcing.dim_index("features"),
         )
 
