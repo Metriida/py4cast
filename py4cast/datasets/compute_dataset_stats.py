@@ -72,7 +72,7 @@ def compute_mean_std_min_max(
 
     results = list(
      tqdm(
-                Parallel(return_as="generator", n_jobs=5)(
+                Parallel(return_as="generator", n_jobs=10)(
                     delayed(compute_stats_worker)(batch, type_tensor)
                     for  batch in dataset.torch_dataloader()
                 ),
