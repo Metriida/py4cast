@@ -2,13 +2,12 @@ from typing import Literal
 import warnings
 import gc
 from joblib import Parallel, delayed
-from base import Item
 
 
 import torch
 from tqdm import tqdm
 
-from py4cast.datasets.base import DatasetABC
+from py4cast.datasets.base import DatasetABC, Item
 from py4cast.utils import torch_save
 
 def compute_stats_worker(batch: Item):
