@@ -120,7 +120,7 @@ def compute_parameters_stats(dataset: DatasetABC):
     # les param en input output calculé 2 fois wtf
 
     for type_tensor in ["inputs", "outputs", "forcing"]:
-        stats_dict = compute_mean_std_min_max(dataset)
+        stats_dict = compute_mean_std_min_max(dataset, type_tensor)
         all_stats = stats_dict | all_stats
 
     dest_file = dataset.cache_dir / "parameters_stats1.pt"
