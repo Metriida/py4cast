@@ -10,7 +10,7 @@ from tqdm import tqdm
 from py4cast.datasets.base import DatasetABC, Item
 from py4cast.utils import torch_save
 
-def compute_stats_worker(batch: Item):
+def compute_stats_worker(batch: Item, type_tensor: Literal["inputs", "outputs", "forcing"]):
     tensor = getattr(batch, type_tensor).tensor
     tensor = tensor.flatten(1, 3)  # Flatten to be (Batch, X, Features)
     counter = tensor.shape[0]  # += batch size
@@ -73,7 +73,7 @@ def compute_mean_std_min_max(
     results = list(
      tqdm(
                 Parallel(return_as="generator", n_jobs=5)(
-                    delayed(compute_stats_worker)(batch)
+                    delayed(compute_stats_worker)(batch, type_tensor)
                     for  batch in dataset.torch_dataloader()
                 ),
                 total=len(dataset.torch_dataloader()),
