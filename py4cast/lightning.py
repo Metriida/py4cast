@@ -557,7 +557,9 @@ class AutoRegressiveLightning(LightningModule):
                     y = self.model(x)
                     y = features_second_to_last(y)
                 else:
+                    print('x before model', torch.isnan(x))
                     y = self.model(x)
+                    print('y after model', torch.isnan(y))
 
                 # We update the latest of our prev_states with the network output
                 if scale_y:
@@ -612,6 +614,8 @@ class AutoRegressiveLightning(LightningModule):
             prediction_list, dim=1
         )  # Stacking is done on time step. (B, pred_steps, N_grid, d_f) or (B, pred_steps, N_lat, N_lon, d_f)
 
+        print('prediction after model', torch.isnan(prediction))
+
         # In inference mode we use a "trained" module which MUST have the output feature names
         # and the output dim names attributes set.
         if phase == "inference":
@@ -624,6 +628,7 @@ class AutoRegressiveLightning(LightningModule):
             pred_out = NamedTensor.new_like(
                 prediction.type_as(batch.outputs.tensor), batch.outputs
             )
+        print('pred_out after model', torch.isnan(pred_out))
         return pred_out, batch.outputs
 
     def _strategy_params(self) -> Tuple[bool, bool, int]:
@@ -715,6 +720,8 @@ class AutoRegressiveLightning(LightningModule):
             dim=forcing.dim_index("features"),
         )
 
+        print('x', torch.isnan(x))
+
         return x
 
     def mask_tensor(self, x):
@@ -763,7 +770,11 @@ class AutoRegressiveLightning(LightningModule):
 
         prediction, target = self.common_step(batch, batch_idx, phase="train")
 
+        print('prediction before loss', torch.isnan(prediction))
+
         mask = self.get_mask_on_nan(target, prediction)
+
+        print('prediction after mask loss', torch.isnan(prediction))
 
         # Compute loss: mean over unrolled times and batch
         batch_loss = torch.mean(self.loss(prediction, target, mask=mask))
