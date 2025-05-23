@@ -563,17 +563,24 @@ class AutoRegressiveLightning(LightningModule):
 
                 ds = self.training_strategy == "downscaling_only"
                 # We update the latest of our prev_states with the network output
+                # select the last timestep
+                last_prev_state = prev_states.select_tensor_dim("timestep", -1)
+
+                if self.mask_on_nan:
+                    last_prev_state = torch.nan_to_num(last_prev_state, nan=0)
+
                 if scale_y:
                     predicted_state = (
                         # select the last timestep
-                        prev_states.select_tensor_dim("timestep", -1) * (1 - ds)
+                        last_prev_state * (1 - ds)
                         + y * step_diff_std
                         + step_diff_mean
                     )
                 else:
                     predicted_state = (
-                        prev_states.select_tensor_dim("timestep", -1) * (1 - ds) + y
+                        last_prev_state * (1 - ds) + y
                     )
+
                 print(scale_y)
                 print('shape', predicted_state.shape)
                 print('newstate after model', torch.any(torch.isnan(predicted_state)))
