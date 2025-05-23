@@ -575,6 +575,9 @@ class AutoRegressiveLightning(LightningModule):
                         prev_states.select_tensor_dim("timestep", -1) * (1 - ds) + y
                     )
 
+                print('shape', predicted_state.shapes)
+                print('newstate after model', torch.any(torch.isnan(predicted_state)))
+
                 # Overwrite border with true state
                 # Force it to true state for all intermediary step
                 if not (phase == "inference") and force_border:
