@@ -585,6 +585,8 @@ class AutoRegressiveLightning(LightningModule):
                 else:
                     new_state = predicted_state
 
+                print('newstate after model', torch.any(torch.isnan(new_state)))
+
                 # Only update the prev_states if we are not at the last step
                 if i < batch.num_pred_steps - 1 or k < num_inter_steps - 1:
                     # Update input states for next iteration: drop oldest, append new_state
@@ -771,7 +773,7 @@ class AutoRegressiveLightning(LightningModule):
 
         prediction, target = self.common_step(batch, batch_idx, phase="train")
 
-        print('prediction before loss', torch.isnan(prediction))
+        print('prediction before loss', torch.any(torch.isnan(prediction.tensor)))
 
         mask = self.get_mask_on_nan(target, prediction)
 
