@@ -561,20 +561,20 @@ class AutoRegressiveLightning(LightningModule):
                 else:
                     y = self.model(x)
 
+                ds = self.training_strategy == "downscaling_only"
                 # We update the latest of our prev_states with the network output
                 if scale_y:
                     predicted_state = (
                         # select the last timestep
-                        prev_states.select_tensor_dim("timestep", -1)
+                        prev_states.select_tensor_dim("timestep", -1) * (1 - ds)
                         + y * step_diff_std
                         + step_diff_mean
                     )
                 else:
-                    ds = self.training_strategy == "downscaling_only"
                     predicted_state = (
                         prev_states.select_tensor_dim("timestep", -1) * (1 - ds) + y
                     )
-
+                print(scale_y)
                 print('shape', predicted_state.shape)
                 print('newstate after model', torch.any(torch.isnan(predicted_state)))
 
