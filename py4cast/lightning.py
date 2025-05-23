@@ -554,12 +554,12 @@ class AutoRegressiveLightning(LightningModule):
                 # Here we adapt our tensors to the order of dimensions of CNNs and ViTs
                 if self.model.features_second:
                     x = features_last_to_second(x)
+                    print('x before model', torch.any(torch.isnan(x)))
                     y = self.model(x)
+                    print('y after model', torch.any(torch.isnan(y)))
                     y = features_second_to_last(y)
                 else:
-                    print('x before model', torch.isnan(x))
                     y = self.model(x)
-                    print('y after model', torch.isnan(y))
 
                 # We update the latest of our prev_states with the network output
                 if scale_y:
@@ -614,7 +614,9 @@ class AutoRegressiveLightning(LightningModule):
             prediction_list, dim=1
         )  # Stacking is done on time step. (B, pred_steps, N_grid, d_f) or (B, pred_steps, N_lat, N_lon, d_f)
 
-        print('prediction after model', torch.isnan(prediction))
+        print('prediction after model', torch.any(torch.isnan(prediction)))
+        for i in range(7):
+            print(f'prediction after model {i}', torch.any(torch.isnan(prediction[:,:,:,:,i])))
 
         # In inference mode we use a "trained" module which MUST have the output feature names
         # and the output dim names attributes set.
@@ -628,7 +630,6 @@ class AutoRegressiveLightning(LightningModule):
             pred_out = NamedTensor.new_like(
                 prediction.type_as(batch.outputs.tensor), batch.outputs
             )
-        print('pred_out after model', torch.isnan(pred_out))
         return pred_out, batch.outputs
 
     def _strategy_params(self) -> Tuple[bool, bool, int]:
