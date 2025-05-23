@@ -575,7 +575,7 @@ class AutoRegressiveLightning(LightningModule):
                         prev_states.select_tensor_dim("timestep", -1) * (1 - ds) + y
                     )
 
-                print('shape', predicted_state.shapes)
+                print('shape', predicted_state.shape)
                 print('newstate after model', torch.any(torch.isnan(predicted_state)))
 
                 # Overwrite border with true state
