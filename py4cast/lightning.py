@@ -651,7 +651,7 @@ class AutoRegressiveLightning(LightningModule):
                 prediction.type_as(batch.outputs.tensor), batch.outputs
             )
         return pred_out, batch.outputs
-
+ 
     def _strategy_params(self) -> Tuple[bool, bool, int]:
         """
         Return the parameters for the desired strategy:
