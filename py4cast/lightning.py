@@ -540,6 +540,7 @@ class AutoRegressiveLightning(LightningModule):
             self.output_dtype = batch.outputs.tensor.dtype
 
         prev_states = batch.inputs
+        print("543", torch.isnan(prev_states))
         prediction_list = []
 
         # Here we do the autoregressive prediction looping
@@ -557,6 +558,7 @@ class AutoRegressiveLightning(LightningModule):
                     ),
                     prev_states.device,
                 )
+                print("561", torch.isnan(step_diff_std), torch.isnan(step_diff_mean))
 
             # Intermediary steps for which we have no y_true data
             # Should be greater or equal to 1 (otherwise nothing is done).
@@ -581,7 +583,7 @@ class AutoRegressiveLightning(LightningModule):
                 last_prev_state = prev_states.select_tensor_dim("timestep", -1)
                 if self.mask_on_nan:
                     last_prev_state = torch.nan_to_num(last_prev_state, nan=0)
-
+                print("586", torch.isnan(last_prev_state))
                 # We update the latest of our prev_states with the network output
                 if scale_y:
                     predicted_state = (
@@ -592,7 +594,7 @@ class AutoRegressiveLightning(LightningModule):
                     )
                 else:
                     predicted_state = last_prev_state * (1 - ds) + y
-
+                print("597", torch.isnan(predicted_state))
                 # Overwrite border with true state
                 # Force it to true state for all intermediary step
                 if not (phase == "inference") and force_border:
@@ -602,7 +604,7 @@ class AutoRegressiveLightning(LightningModule):
                     )
                 else:
                     new_state = predicted_state
-
+                print("607", torch.isnan(new_state))
                 # Only update the prev_states if we are not at the last step
                 if i < batch.num_pred_steps - 1 or k < num_inter_steps - 1:
                     # Update input states for next iteration: drop oldest, append new_state
@@ -619,6 +621,7 @@ class AutoRegressiveLightning(LightningModule):
                         ],
                         dim=timestep_dim_index,
                     )
+                    print("624", torch.isnan(new_prev_states_tensor))
 
                     # Make a new NamedTensor with the same dim and
                     # feature names as the original prev_states
@@ -628,10 +631,13 @@ class AutoRegressiveLightning(LightningModule):
             # Append prediction to prediction list only "normal steps"
             prediction_list.append(new_state)
 
+        print("634", torch.isnan(new_state))
+
         prediction = torch.stack(
             prediction_list, dim=1
         )  # Stacking is done on time step. (B, pred_steps, N_grid, d_f) or (B, pred_steps, N_lat, N_lon, d_f)
 
+        print("640", torch.isnan(prediction))
         # In inference mode we use a "trained" module which MUST have the output feature names
         # and the output dim names attributes set.
         if phase == "inference":
