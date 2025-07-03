@@ -540,7 +540,6 @@ class AutoRegressiveLightning(LightningModule):
             self.output_dtype = batch.outputs.tensor.dtype
 
         prev_states = batch.inputs
-        print("543", torch.isnan(prev_states))
         prediction_list = []
 
         # Here we do the autoregressive prediction looping
