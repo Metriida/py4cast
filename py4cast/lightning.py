@@ -614,7 +614,8 @@ class AutoRegressiveLightning(LightningModule):
                         "timestep", -1
                     ).clone()
                     last_coarse_step = batch.forcing.select_dim("timestep", i).clone()
-                    print(torch.all(first_coarse_step==last_coarse_step))
+                    print("first", first_coarse_step)
+                    print("last", last_coarse_step)
                     if self.mask_on_nan:
                         last_coarse_step = torch.nan_to_num(last_coarse_step, nan=0)
                     # only add common features
