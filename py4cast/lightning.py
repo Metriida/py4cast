@@ -613,7 +613,7 @@ class AutoRegressiveLightning(LightningModule):
                     first_coarse_step = batch.forcing.select_tensor_dim(
                         "timestep", -1
                     ).clone()
-                    last_coarse_step = batch.forcing.select_dim("timestep", i).clone()
+                    last_coarse_step = batch.forcing.select_dim("timestep", i).tensor.clone()
                     print("first", first_coarse_step)
                     print("last", last_coarse_step)
                     if self.mask_on_nan:
